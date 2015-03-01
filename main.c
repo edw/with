@@ -19,41 +19,43 @@ char* trimr(char* s) {
   return s;
 }
 
-char *get_name(char const *type) {
+char *get_name(FILE *in, FILE *out, char const *type) {
   char *s=NULL;
   size_t capp=0;
 
-  printf("%s: ", type);
-  getline(&s, &capp, stdin);
+  fprintf(out, "%s: ", type);
+  getline(&s, &capp, in);
   trimr(s);
 
   return s;
 }
 
-struct person {
+typedef struct person {
   char *first;
   char *last;
-};
+} person;
 
 void *getperson(va_list ap) {
-  struct person *p;
-
-  p = malloc(sizeof(struct person));
+  person *p;
+  FILE *in = va_arg(ap, FILE *);
+  FILE *out = va_arg(ap, FILE *);
+  p = malloc(sizeof(person));
   assert(p != NULL);
-  p->first = get_name(FIRST_NAME);
-  p->last = get_name(LAST_NAME);
+  p->first = get_name(in, out, FIRST_NAME);
+  p->last = get_name(in, out, LAST_NAME);
   return p;
 }
 
 int greetperson(void *o, va_list ap) {
-  struct person *p = o;
+  person *p = o;
+  FILE *out = va_arg(ap, FILE *);
   char *greeting = va_arg(ap, char *);
-  printf("%s, %s %s.\n", greeting, p->first, p->last);
+  fprintf(out, "%s, %s %s.\n", greeting, p->first, p->last);
   return 0;
 }
 
 void freeperson(void *o) {
-  struct person *p = o;
+  person *p = o;
   if(p != NULL) {
     free(p->first);
     free(p->last);
@@ -63,7 +65,8 @@ void freeperson(void *o) {
 
 int main(int argc, char **argv) {
   with(getperson, greetperson, freeperson,
-       "Yo");
+       stdin, stdout,
+       stdout, "Yo");
   
   return 0;
 }
