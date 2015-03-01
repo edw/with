@@ -39,6 +39,7 @@ void *getperson(va_list ap) {
   person *p;
   FILE *in = va_arg(ap, FILE *);
   FILE *out = va_arg(ap, FILE *);
+
   p = malloc(sizeof(person));
   assert(p != NULL);
   p->first = get_name(in, out, FIRST_NAME);
@@ -50,12 +51,14 @@ int greetperson(void *o, va_list ap) {
   person *p = o;
   FILE *out = va_arg(ap, FILE *);
   char *greeting = va_arg(ap, char *);
+
   fprintf(out, "%s, %s %s.\n", greeting, p->first, p->last);
   return 0;
 }
 
 void freeperson(void *o) {
   person *p = o;
+
   if(p != NULL) {
     free(p->first);
     free(p->last);
@@ -67,6 +70,5 @@ int main(int argc, char **argv) {
   with(getperson, greetperson, freeperson,
        stdin, stdout,
        stdout, "Yo");
-  
   return 0;
 }
