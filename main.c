@@ -38,11 +38,10 @@ typedef struct person {
 } person;
 
 void *getperson(va_list ap) {
-  person *p;
+  person *p=malloc(sizeof(person));
   FILE *in = va_arg(ap, FILE *);
   FILE *out = va_arg(ap, FILE *);
 
-  p = malloc(sizeof(person));
   assert(p != NULL);
   p->first = get_name(in, out, FIRST_NAME);
   p->last = get_name(in, out, LAST_NAME);
@@ -50,8 +49,7 @@ void *getperson(va_list ap) {
   return p;
 }
 
-int greetperson(void *o, va_list ap) {
-  person *p = o;
+int greetperson(person *p, va_list ap) {
   FILE *out = va_arg(ap, FILE *);
   char *greeting = va_arg(ap, char *);
 
@@ -60,9 +58,7 @@ int greetperson(void *o, va_list ap) {
   return 0;
 }
 
-void freeperson(void *o) {
-  person *p = o;
-
+void freeperson(person *p) {
   if(p != NULL) {
     free(p->first);
     free(p->last);
@@ -71,7 +67,7 @@ void freeperson(void *o) {
 }
 
 int main(int argc, char **argv) {
-  with(getperson, greetperson, freeperson,
+  with(getperson, (usefn)greetperson, (releasefn)freeperson,
        stdin, stdout,
        stdout, "Yo");
   return 0;
