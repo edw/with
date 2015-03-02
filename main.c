@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <assert.h>
+#include <sysexits.h>
 
 #include "with.h"
 
@@ -70,5 +71,6 @@ int main(int argc, char **argv) {
   with(getperson, (usefn)greetperson, (releasefn)freeperson,
        stdin, stdout,
        stdout, "Yo");
-  return 0;
+
+  return EXIT_SUCCESS;
 }
