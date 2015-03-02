@@ -13,9 +13,11 @@
 
 char* trimr(char* s) {
   size_t len=strlen(s);
+
   if(len && s[len-1]=='\n') {
     s[len-1]='\0';
   }
+
   return s;
 }
 
@@ -44,6 +46,7 @@ void *getperson(va_list ap) {
   assert(p != NULL);
   p->first = get_name(in, out, FIRST_NAME);
   p->last = get_name(in, out, LAST_NAME);
+
   return p;
 }
 
@@ -53,6 +56,7 @@ int greetperson(void *o, va_list ap) {
   char *greeting = va_arg(ap, char *);
 
   fprintf(out, "%s, %s %s.\n", greeting, p->first, p->last);
+
   return 0;
 }
 
