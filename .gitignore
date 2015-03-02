@@ -1,5 +1,5 @@
 *.o
-nerd-test
+a.out
 .#*
 .~
 *~
