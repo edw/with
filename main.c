@@ -12,19 +12,19 @@
 
 #define MAX_NAME_SIZE 255
 
-char* trimr(char* s) {
-  size_t len=strlen(s);
+char *trimr(char *s) {
+  size_t len = strlen(s);
 
-  if(len && s[len-1]=='\n') {
-    s[len-1]='\0';
+  if (len && s[len - 1] == '\n') {
+    s[len - 1] = '\0';
   }
 
   return s;
 }
 
 char *get_name(FILE *in, FILE *out, char const *type) {
-  char *s=NULL;
-  size_t capp=0;
+  char *s = NULL;
+  size_t capp = 0;
 
   fprintf(out, "%s: ", type);
   getline(&s, &capp, in);
@@ -39,7 +39,7 @@ typedef struct person {
 } person;
 
 void *getperson(va_list ap) {
-  person *p=malloc(sizeof(person));
+  person *p = malloc(sizeof(person));
   FILE *in = va_arg(ap, FILE *);
   FILE *out = va_arg(ap, FILE *);
 
@@ -60,7 +60,7 @@ int greetperson(person *p, va_list ap) {
 }
 
 void freeperson(person *p) {
-  if(p != NULL) {
+  if (p != NULL) {
     free(p->first);
     free(p->last);
     free(p);
@@ -68,8 +68,7 @@ void freeperson(person *p) {
 }
 
 int main(int argc, char **argv) {
-  with(getperson, (usefn)greetperson, (releasefn)freeperson,
-       stdin, stdout,
+  with(getperson, (usefn)greetperson, (releasefn)freeperson, stdin, stdout,
        stdout, "Yo");
 
   return EXIT_SUCCESS;
